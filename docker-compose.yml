@@ -1,0 +1,31 @@
+version: '3.8'
+
+networks:
+  api-network:
+    driver: bridge
+
+volumes:
+  mongodb_vol:
+
+services:
+  api:
+    image: raphaelcastro35/dojo-api_produto:v1
+    networks:
+      - api-network
+    depends_on:
+      - mongodb
+    environment:
+      MONGODB_URI: mongodb://mongouser:mongopwd@mongodb:27017/admin
+    ports:
+      - "8080:8080"
+  mongodb:
+    image: mongo:5.0.3
+    networks:
+      - api-network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongouser
+      MONGO_INITDB_ROOT_PASSWORD: mongopwd
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_vol:/data/db
